@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: tienda-deportiva
+    env: python
+    region: ohio
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn tienda_deportiva.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
