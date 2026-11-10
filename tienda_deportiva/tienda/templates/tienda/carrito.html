@@ -1,0 +1,38 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+<h2 class="fw-bold mb-4">Tu Carrito de Compras</h2>
+{% if carrito %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="list-group shadow-sm">
+            {% for id, item in carrito.items %}
+            <div class="list-group-item d-flex align-items-center py-3">
+                <img src="/static/images/{{ item.imagen }}" style="width: 80px; height: 80px; object-fit: cover;" class="me-3 bg-light">
+                <div class="flex-grow-1">
+                    <h5 class="mb-1 fw-bold">{{ item.nombre }}</h5>
+                    <p class="mb-0 text-muted small">Talle US: {{ item.talle_us }} | Cantidad: {{ item.cantidad }}</p>
+                    <span class="fw-bold text-dark">${{ item.precio }} USD</span>
+                </div>
+                <a href="{% url 'eliminar_del_carrito' id %}" class="btn btn-outline-danger btn-sm rounded-0"><i class="bi bi-trash"></i></a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 shadow-sm">
+            <h4 class="fw-bold mb-3">Resumen de Compra</h4>
+            <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+                <span>Total Estimado:</span>
+                <span class="fw-bold fs-5">${{ total_general }} USD</span>
+            </div>
+            <a href="{% url 'checkout' %}" class="btn btn-dark btn-lg w-100 rounded-0">Iniciar Pago Seguro</a>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info text-center py-5">
+    <h4>Tu carrito está vacío</h4>
+    <a href="{% url 'inicio' %}" class="btn btn-dark mt-3 rounded-0">Explorar Artículos</a>
+</div>
+{% endif %}
+{% endblock %}

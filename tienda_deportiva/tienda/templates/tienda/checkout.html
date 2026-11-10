@@ -1,0 +1,46 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7 bg-white p-5 shadow-sm">
+        <h2 class="fw-bold mb-4">Pasarela de Pagos (Simulador Seguro)</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <h5 class="text-muted mb-3">1. Datos de Envío</h5>
+            <div class="mb-3">
+                <label class="form-label">Nombre Completo</label>
+                <input type="text" name="nombre" class="form-control rounded-0" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" name="email" class="form-control rounded-0" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Dirección de Entrega</label>
+                <input type="text" name="direccion" class="form-control rounded-0" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ciudad / Provincia</label>
+                <input type="text" name="ciudad" class="form-control rounded-0" required>
+            </div>
+
+            <h5 class="text-muted mt-4 mb-3">2. Datos de Pago (Tarjeta Simulada)</h5>
+            <div class="mb-3">
+                <label class="form-label">Número de Tarjeta</label>
+                <input type="text" class="form-control rounded-0" value="4532 •••• •••• 8892" readonly>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Vencimiento</label>
+                    <input type="text" class="form-control rounded-0" value="09/28" readonly>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">CVV</label>
+                    <input type="text" class="form-control rounded-0" value="•••" readonly>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100 rounded-0 mt-3">Pagar ${{ total_general }} USD</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

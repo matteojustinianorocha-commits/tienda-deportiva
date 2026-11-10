@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPORT-TECH | Official Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root { --bg-dark: #111; --accent: #ff4655; }
+        body { background-color: #f4f5f7; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #111; }
+        
+        /* Top Banner Notice */
+        .announcement-bar { background-color: #000; color: #fff; font-size: 0.8rem; letter-spacing: 1px; }
+
+        /* Navbar */
+        .navbar { background-color: #fff; border-bottom: 1px solid #e5e5e5; }
+        .navbar-brand { font-weight: 900; letter-spacing: -1px; font-size: 1.5rem; color: #000 !important; }
+        .nav-link { font-weight: 600; text-transform: uppercase; font-size: 0.85rem; color: #333 !important; letter-spacing: 0.5px; }
+        .nav-link:hover { color: var(--accent) !important; }
+
+        /* Cards Pro */
+        .card-product { border: none; background: #fff; transition: all 0.3s ease; }
+        .card-product:hover { transform: translateY(-6px); box-shadow: 0 1rem 2rem rgba(0,0,0,.08)!important; }
+        .card-img-wrapper { background-color: #f0f0f0; height: 320px; overflow: hidden; position: relative; }
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .card-product:hover .card-img-wrapper img { transform: scale(1.05); }
+
+        /* Footer */
+        footer { background-color: #111; color: #aaa; font-size: 0.9rem; }
+        footer h5 { color: #fff; font-weight: 700; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior Estilo Marca -->
+    <div class="announcement-bar text-center py-2 text-uppercase fw-semibold">
+        ⚡ Envíos gratis en compras superiores a $150 USD | Talles oficiales US
+    </div>
+
+    <!-- Navegación Principal -->
+    <nav class="navbar navbar-expand-lg sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'inicio' %}">SPORT-TECH<span style="color: #ff4655;">.</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+               <ul class="navbar-nav mx-auto">
+                   <li class="nav-item"><a class="nav-link" href="{% url 'inicio' %}?deporte=Fútbol">Fútbol</a></li>
+                   <li class="nav-item"><a class="nav-link" href="{% url 'inicio' %}?deporte=Vóley">Vóley</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'inicio' %}?deporte=Básquet">Básquet</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'ver_carrito' %}" class="btn btn-dark rounded-pill px-4 fw-semibold text-uppercase fs-7">
+                        <i class="bi bi-bag-fill me-2"></i> Carrito
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido Dinámico -->
+    <main class="my-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer Profesional -->
+    <footer class="py-5 mt-5 border-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>SPORT-TECH</h5>
+                    <p class="small text-muted">Indumentaria, calzado y artículos de alto rendimiento para Fútbol, Vóley y Básquet con estándares globales.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>AYUDA Y SOPORTE</h5>
+                    <ul class="list-unstyled small text-muted">
+                        <li><a href="#" class="text-decoration-none text-muted">Seguimiento de Envío</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">Guía de Talles US</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">Devoluciones</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>SUSCRIPCIÓN</h5>
+                    <p class="small text-muted">Entérate de los nuevos lanzamientos exclusivos en botines e indumentaria.</p>
+                </div>
+            </div>
+            <div class="text-center pt-4 border-top border-secondary text-secondary small">
+                &copy; 2026 SPORT-TECH Inc. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+<style>
+    .zoom-container {
+        overflow: hidden;
+        position: relative;
+        cursor: crosshair;
+        background-color: #f8f9fa;
+    }
+    .zoom-container img {
+        transition: transform 0.2s ease-out, opacity 0.3s ease;
+        transform-origin: center center;
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    .option-btn {
+        border: 2px solid #ddd;
+        background: #fff;
+        padding: 8px 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-check:checked + .option-btn {
+        border-color: #000;
+        background-color: #000;
+        color: #fff;
+    }
+</style>
+
+<div class="container my-5">
+    <div class="row bg-white p-4 shadow-sm rounded-0">
+        <!-- Visor con Lupa e Imagen Dinámica -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="zoom-container border mb-2" id="imageZoom">
+                <img src="/static/images/{{ producto.imagen }}" id="productImg" alt="{{ producto.nombre }}">
+            </div>
+            <p class="text-muted small text-center"><i class="bi bi-search"></i> Pasa el cursor para hacer zoom</p>
+        </div>
+
+        <!-- Opciones de Compra -->
+        <div class="col-md-6 ps-md-5">
+            <span class="badge bg-dark text-uppercase mb-2">{{ producto.deporte.nombre }} - {{ producto.categoria.nombre }}</span>
+            <h1 class="fw-bold display-6">{{ producto.nombre }}</h1>
+            <h3 class="text-dark fw-black my-3">${{ producto.precio }} <span class="fs-6 text-muted fw-normal">USD</span></h3>
+
+            <form action="{% url 'agregar_al_carrito' producto.id %}" method="POST">
+                {% csrf_token %}
+
+                <!-- Selector de Colores -->
+                <div class="mb-4">
+                    <label class="fw-bold text-uppercase small d-block mb-2">Color seleccionado:</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for color in colores_list %}
+                        <input type="radio" class="btn-check color-radio" name="color" id="color_{{ forloop.counter }}" value="{{ color }}" 
+                        {% for img_obj in producto.imagenes_extra.all %}
+                            {% if img_obj.color|lower == color|lower %}
+                                data-img="/static/images/{{ img_obj.archivo_imagen }}"
+                            {% endif %}
+                        {% endfor %}
+                        {% if forloop.first %}checked{% endif %}>
+                        <label class="option-btn text-uppercase" for="color_{{ forloop.counter }}">{{ color }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Selector de Talles (Dinámico según Indumentaria o Calzado) -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="fw-bold text-uppercase small m-0">
+                            Seleccionar Talle ({% if producto.tipo_producto == 'calzado' %}US{% else %}Ropa{% endif %}):
+                        </label>
+                        <a href="#" class="small text-muted text-decoration-underline" data-bs-toggle="modal" data-bs-target="#tallesModal">Guía de talles</a>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for talle in talles_list %}
+                        <input type="radio" class="btn-check" name="talle" id="talle_{{ forloop.counter }}" value="{{ talle }}" {% if forloop.first %}checked{% endif %}>
+                        <label class="option-btn text-uppercase" for="talle_{{ forloop.counter }}">{{ talle }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-dark btn-lg w-100 rounded-0 text-uppercase fw-bold py-3 mb-2">Añadir al Carrito</button>
+            </form>
+
+            <!-- Especificaciones Técnicas -->
+            <div class="mt-4 pt-4 border-top">
+                <h5 class="fw-bold text-uppercase fs-6 mb-3">Especificaciones Técnicas</h5>
+                <p class="text-muted">{{ producto.descripcion }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Guía de Talles Inteligente (Indumentaria vs Calzado) -->
+<div class="modal fade" id="tallesModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-0">
+      <div class="modal-header">
+        <h5 class="modal-header-title fw-bold text-uppercase m-0">
+            {% if producto.tipo_producto == 'calzado' %} Guía de Talles - Calzado (US) {% else %} Guía de Talles - Indumentaria {% endif %}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        {% if producto.tipo_producto == 'calzado' %}
+        <!-- Tabla de Calzado -->
+        <table class="table table-bordered text-center small m-0">
+            <thead class="table-dark">
+                <tr><th>US</th><th>EU</th><th>CM</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>US 7.0</td><td>40.0</td><td>25.0 cm</td></tr>
+                <tr><td>US 8.0</td><td>41.0</td><td>26.0 cm</td></tr>
+                <tr><td>US 9.0</td><td>42.5</td><td>27.0 cm</td></tr>
+                <tr><td>US 10.0</td><td>44.0</td><td>28.0 cm</td></tr>
+                <tr><td>US 11.0</td><td>45.0</td><td>29.0 cm</td></tr>
+            </tbody>
+        </table>
+        {% else %}
+        <!-- Tabla de Indumentaria Completa -->
+        <div class="table-responsive">
+            <table class="table table-bordered text-center small m-0 align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Talle USA</th>
+                        <th>Talle Arg</th>
+                        <th>Talle Eur</th>
+                        <th>Busto (cm)</th>
+                        <th>Cintura (cm)</th>
+                        <th>Cadera (cm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>XS / 0</td><td>34</td><td>32</td><td>78-80</td><td>60-62</td><td>84-86</td></tr>
+                    <tr><td>XS / 2</td><td>36</td><td>34</td><td>82-84</td><td>64-66</td><td>88-90</td></tr>
+                    <tr><td>S / 4</td><td>38</td><td>36</td><td>86-88</td><td>68-70</td><td>92-94</td></tr>
+                    <tr><td>S / 6</td><td>40</td><td>38</td><td>90-92</td><td>72-74</td><td>96-98</td></tr>
+                    <tr><td>M / 8</td><td>42</td><td>40</td><td>94-96</td><td>76-78</td><td>100-102</td></tr>
+                    <tr><td>M / 10</td><td>44</td><td>42</td><td>98-100</td><td>80-82</td><td>104-106</td></tr>
+                    <tr><td>L / 12</td><td>46</td><td>44</td><td>102-104</td><td>84-86</td><td>108-110</td></tr>
+                    <tr><td>L / 14</td><td>48</td><td>46</td><td>106-108</td><td>88-90</td><td>112-114</td></tr>
+                    <tr><td>XL / 16</td><td>50</td><td>48</td><td>110-114</td><td>92-96</td><td>116-120</td></tr>
+                    <tr><td>XXL / 18</td><td>52</td><td>50</td><td>116-120</td><td>98-102</td><td>122-126</td></tr>
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script de Lupa y Cambio Dinámico de Imagen por Color -->
+<script>
+    const colorRadios = document.querySelectorAll('.color-radio');
+    const productImg = document.getElementById('productImg');
+
+    colorRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.checked) {
+                const nuevaImagenUrl = this.getAttribute('data-img');
+                if (nuevaImagenUrl) {
+                    productImg.style.opacity = '0.4';
+                    setTimeout(() => {
+                        productImg.src = nuevaImagenUrl;
+                        productImg.style.opacity = '1';
+                    }, 150);
+                }
+            }
+        });
+    });
+
+    const zoomContainer = document.getElementById('imageZoom');
+
+    zoomContainer.addEventListener('mousemove', (e) => {
+        const rect = zoomContainer.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        
+        productImg.style.transformOrigin = `${x}% ${y}%`;
+        productImg.style.transform = "scale(2.2)";
+    });
+
+    zoomContainer.addEventListener('mouseleave', () => {
+        productImg.style.transform = "scale(1)";
+        productImg.style.transformOrigin = "center center";
+    });
+</script>
+{% endblock %}

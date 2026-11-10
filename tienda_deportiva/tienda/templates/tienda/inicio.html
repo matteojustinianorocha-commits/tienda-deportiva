@@ -1,0 +1,90 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    
+    <!-- BANNER HERO MODERNIZADO Y ATRACTIVO -->
+    <div class="p-5 mb-5 border-0 shadow-lg position-relative overflow-hidden text-white" 
+         style="background: linear-gradient(135deg, #111111 0%, #2b2b2b 100%); border-radius: 12px;">
+        
+        <!-- Elemento decorativo de fondo sutil -->
+        <div class="position-absolute top-0 end-0 p-4 opacity-10 display-1 fw-black d-none d-md-block" style="letter-spacing: -5px;">
+            2026
+        </div>
+
+        <div class="container-fluid py-3 position-relative z-index-1">
+            <span class="badge bg-warning text-dark fw-bold text-uppercase px-3 py-2 mb-3 rounded-pill" style="letter-spacing: 1px;">Nueva Colección</span>
+            <h1 class="display-4 fw-black text-uppercase mb-3" style="letter-spacing: -1px;">Sport-Tech <span class="text-warning">Elite</span></h1>
+            <p class="col-md-7 fs-5 text-light opacity-85 mb-4 lh-base">
+                Equipamiento de alto rendimiento para Fútbol, Vóley y Básquet. Diseñado con tecnología de máxima transpirabilidad y talles oficiales US.
+            </p>
+            <div class="d-flex gap-3">
+                <a href="#catalogo" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold text-uppercase text-dark shadow-sm">Explorar Catálogo</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="catalogo">
+        <!-- Columna Izquierda: Filtros -->
+        <div class="col-md-3 mb-4">
+            <h5 class="fw-bold text-uppercase mb-3">Filtrar por</h5>
+            
+            <div class="mb-4">
+                <h6 class="fw-bold small text-uppercase text-muted">Deportes</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'inicio' %}" class="text-decoration-none text-dark">Todos los deportes</a></li>
+                    <li class="mb-2"><a href="{% url 'inicio' %}?deporte=Fútbol" class="text-decoration-none text-dark">⚽ Fútbol</a></li>
+                    <li class="mb-2"><a href="{% url 'inicio' %}?deporte=Vóley" class="text-decoration-none text-dark">🏐 Vóley</a></li>
+                    <li class="mb-2"><a href="{% url 'inicio' %}?deporte=Básquet" class="text-decoration-none text-dark">🏀 Básquet</a></li>
+                </ul>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="fw-bold small text-uppercase text-muted">Género</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="{% url 'inicio' %}?genero=H" class="text-decoration-none text-dark">Hombre</a></li>
+                    <li class="mb-2"><a href="{% url 'inicio' %}?genero=M" class="text-decoration-none text-dark">Mujer</a></li>
+                    <li class="mb-2"><a href="{% url 'inicio' %}?genero=U" class="text-decoration-none text-dark">Unisex</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Catálogo de Productos -->
+        <div class="col-md-9">
+            <h2 class="fw-bold text-uppercase mb-4">Catálogo Deportivo</h2>
+
+            <div class="row">
+                {% for producto in productos %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 rounded-0 border shadow-sm">
+                        
+                        <!-- Imagen Principal -->
+                        <a href="{% url 'detalle_producto' producto.id %}">
+                            <img src="/static/images/{{ producto.imagen }}" class="card-img-top rounded-0" alt="{{ producto.nombre }}" style="height: 300px; object-fit: cover;">
+                        </a>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small text-muted text-uppercase">{{ producto.deporte.nombre }}</span>
+                                <span class="badge border text-dark fw-normal rounded-0">US</span>
+                            </div>
+                            
+                            <h5 class="card-title fw-bold text-dark mb-1">{{ producto.nombre }}</h5>
+                            <p class="card-text fw-black mb-4">${{ producto.precio }} <span class="fs-6 text-muted fw-normal">USD</span></p>
+
+                            <div class="mt-auto">
+                                <a href="{% url 'detalle_producto' producto.id %}" class="btn btn-dark w-100 rounded-0 text-uppercase fw-bold py-2">Ver Producto</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">No hay productos disponibles para este filtro.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
